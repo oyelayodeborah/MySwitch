@@ -1,0 +1,77 @@
+﻿@model IEnumerable<MySwitch.Core.Models.Scheme>
+
+@{
+    ViewBag.Title = "View All Schemes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["Message"] != null)
+{
+    if (TempData["Message"].ToString() == "Success")
+    {
+        <div class="alert alert-success">
+            <p>@TempData["Message"] <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> </p>
+
+        </div>
+
+    }
+}
+<p>
+    @Html.ActionLink("Add new Scheme", "Add")
+</p>
+<table class="table table-hover table-responsive table-condensed" id="customers">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RouteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionTypeChannelFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            @{
+                var repo = new MySwitch.Data.Repositories.SinkNodeRepository();
+                var RouteId = repo.Get(Convert.ToInt32(item.RouteId));
+                <td>
+                    @RouteId
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionTypeChannelFee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+
+            </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+@section ViewSpecificJavascript
+    {
+    <script>
+            $(document).ready(function () {
+                setTimeout(function () {
+                    $(".alert").fadeOut(100, null);
+                },
+                    3000);
+            });
+            $("#customers").dataTable();
+
+    </script>
+
+}
